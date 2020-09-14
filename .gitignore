@@ -1,0 +1,7 @@
+.env
+*.pdf
+csvjson (3).json
+test.json
+Argentina_Stores (1).csv
+*.log
+node_modules
