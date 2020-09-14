@@ -1,3 +1,4 @@
+require('dotenv');
 const path = require('path');
 const axios = require('axios');
 const FormData = require('form-data');
@@ -11,7 +12,7 @@ const files = jsonParser();
 const readFile = (currentToken) => {
     files.forEach(file => {
         const data = new FormData()
-        let url = `https://www.zohoapis.com/crm/v2/Potentials/${file.ID_DEAL_ZOHO}/Attachments`;
+        let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_DEAL_ZOHO}/Attachments`;
         data.append('file', fs.createReadStream(`${directoryPath}${file.ID_STORE_EXT}.pdf`));
 
         const config = {
