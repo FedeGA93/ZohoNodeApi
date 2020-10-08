@@ -1,4 +1,4 @@
-const directoryPath = require('../pdf/tienenAttachment.json');
+const directoryPath = require('../pdf/mcdonalds.json');
 const arr = directoryPath
 const jsonParsed = [];
 

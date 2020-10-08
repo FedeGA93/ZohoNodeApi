@@ -7,32 +7,31 @@ const { logger } = require('./logger/logs');
 const directoryPath = path.join(__dirname, './pdf/Contratos');
 const { jsonParser } = require('./csvParser/jsonParser');
 const files = jsonParser();
-let contador = 0;
-let archivos = 0;
-
-const readFile = (currentToken) => {
+console.log(files);
 
 
+const readFile = async (currentToken) => {
 
     files.forEach(file => {
-        archivos++;
         const data = new FormData()
-        let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_DEAL_ZOHO}/Attachments`;
-        if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.pdf`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.pdf`));
-        } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.zip`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.zip`));
-        } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.docx`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.docx`));
-        } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jpg`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jpg`));
-        } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jpeg`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jpeg`));
-        } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jfif`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jfif`));
+        let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_ZOHO}/Attachments`;
+
+        if (fs.existsSync(`${directoryPath}/${file.FILE_NAME}.xlsx`)) {
+            data.append('file', fs.createReadStream(`${directoryPath}/${file.FILE_NAME}.xlsx`));
         }
+        // else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.zip`)) {
+        //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.zip`));
+        // } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.docx`)) {
+        //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.docx`));
+        // } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jpg`)) {
+        //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jpg`));
+        // } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jpeg`)) {
+        //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jpeg`));
+        // } else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.jfif`)) {
+        //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jfif`));
+        // }
         else {
-            logger.error(`the zoho id: ${file.ID_DEAL_ZOHO}  the file: ${file.ID_STORE_EXT} doesnt exist`);
+            logger.error(`the zoho id: ${file.ID_ZOHO}  the file: ${file.FILE_NAME} doesnt exist`);
         }
         const config = {
             method: 'post',
@@ -42,21 +41,18 @@ const readFile = (currentToken) => {
                 'Authorization': `Zoho-oauthtoken ${currentToken}`,
                 ...data.getHeaders()
             },
-            data: data
+            data
         };
         if (data._overheadLength > 0) {
             axios(config)
                 .then(function (response) {
-                    logger.info(JSON.stringify(response.data), `the zoho id: ${file.ID_DEAL_ZOHO}`);
+                    logger.info(JSON.stringify(response.data), `the zoho id: ${file.ID_ZOHO}`);
                 })
                 .catch(function (error) {
                     logger.error(error);
                 });
-            contador++;
         }
     }
     );
-
-    console.log(`Listo! Se cargaron ${contador} de ${archivos}`);
 }
 module.exports = { readFile };
