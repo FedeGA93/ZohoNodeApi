@@ -1,7 +1,6 @@
 require('dotenv');
 const axios = require('axios');
 const { logger } = require('./logger/logs');
-
 let contador = 0;
 let archivos = 0;
 let invalid = 0;

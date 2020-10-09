@@ -14,12 +14,12 @@ const getAttachmentList = (currentToken) => {
 
     files.forEach(file => {
         console.log(file)
-
     });
+
     let idZohoTest = 4302002000155774764;
 
     archivos++;
-    let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${idZohoTest}/Attachments`
+    let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${idZohoTest}/Attachments`;
 
 
     const config = {
