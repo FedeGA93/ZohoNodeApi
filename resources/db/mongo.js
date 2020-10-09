@@ -15,7 +15,6 @@ db.once('open', function () {
 });
 
 
-
 const Token = new Schema({
     access_token: String,
     createDate: { type: Date, default: moment().format() },

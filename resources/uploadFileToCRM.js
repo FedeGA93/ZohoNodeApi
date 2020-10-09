@@ -7,14 +7,10 @@ const { logger } = require('./logger/logs');
 const directoryPath = path.join(__dirname, './pdf/Contratos');
 const { jsonParser } = require('./csvParser/jsonParser');
 const files = jsonParser();
-console.log(files);
-let contador = 0;
-let archivos = 0;
 
 const readFile = async (currentToken) => {
 
     files.forEach(file => {
-        archivos++;
         const data = new FormData()
         let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_DEAL_ZOHO}/Attachments`;
         if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.xlsx`)) {
@@ -52,11 +48,9 @@ const readFile = async (currentToken) => {
                 .catch(function (error) {
                     logger.error(error);
                 });
-            contador++;
         }
     }
     );
 
-    console.log(`Listo! Se cargaron ${contador} de ${archivos}`);
 }
 module.exports = { readFile };
