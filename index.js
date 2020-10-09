@@ -18,7 +18,7 @@ async function httpRequest() {
             logger.info(`Success Message and variables: ${currentToken}`);
             readFile(currentToken);
             // getAttachmentList(currentToken);
-            //deleteAttachment(currentToken);
+            // deleteAttachment(currentToken);
         }
     } catch (error) {
         logger.error(`Error Message : ${error}`);

@@ -8,16 +8,17 @@ const directoryPath = path.join(__dirname, './pdf/Contratos');
 const { jsonParser } = require('./csvParser/jsonParser');
 const files = jsonParser();
 console.log(files);
-
+let contador = 0;
+let archivos = 0;
 
 const readFile = async (currentToken) => {
 
     files.forEach(file => {
+        archivos++;
         const data = new FormData()
-        let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_ZOHO}/Attachments`;
-
-        if (fs.existsSync(`${directoryPath}/${file.FILE_NAME}.xlsx`)) {
-            data.append('file', fs.createReadStream(`${directoryPath}/${file.FILE_NAME}.xlsx`));
+        let url = `https://www.zohoapis.com/crm/v2/${process.env.ZOHO_MODULE}/${file.ID_DEAL_ZOHO}/Attachments`;
+        if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.xlsx`)) {
+            data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.xlsx`));
         }
         // else if (fs.existsSync(`${directoryPath}/${file.ID_STORE_EXT}.zip`)) {
         //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.zip`));
@@ -31,7 +32,7 @@ const readFile = async (currentToken) => {
         //     data.append('file', fs.createReadStream(`${directoryPath}/${file.ID_STORE_EXT}.jfif`));
         // }
         else {
-            logger.error(`the zoho id: ${file.ID_ZOHO}  the file: ${file.FILE_NAME} doesnt exist`);
+            logger.error(`the zoho id: ${file.ID_DEAL_ZOHO}  the file: ${file.ID_STORE_EXT} doesnt exist`);
         }
         const config = {
             method: 'post',
@@ -41,18 +42,21 @@ const readFile = async (currentToken) => {
                 'Authorization': `Zoho-oauthtoken ${currentToken}`,
                 ...data.getHeaders()
             },
-            data
+            data: data
         };
         if (data._overheadLength > 0) {
             axios(config)
                 .then(function (response) {
-                    logger.info(JSON.stringify(response.data), `the zoho id: ${file.ID_ZOHO}`);
+                    logger.info(JSON.stringify(response.data), `the zoho id: ${file.ID_DEAL_ZOHO}`);
                 })
                 .catch(function (error) {
                     logger.error(error);
                 });
+            contador++;
         }
     }
     );
+
+    console.log(`Listo! Se cargaron ${contador} de ${archivos}`);
 }
 module.exports = { readFile };
